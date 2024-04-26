@@ -19,8 +19,8 @@ param (
     [string]$Exercise
 )
 
-# Import shared functionality
-. ./shared.ps1
+
+$PSNativeCommandUseErrorActionPreference = $true
 
 function Update-Documentation {
     [CmdletBinding(SupportsShouldProcess)]
@@ -31,10 +31,10 @@ function Update-Documentation {
 
     if ($PSCmdlet.ShouldProcess((& { If ($Exercise) { $Exercise } Else { "All Exercises" } }), "fetch configlet and pull specifications")) {
         Write-Output "Updating docs"
-        Invoke-CallScriptExitOnError { ./bin/fetch-configlet }
+        & ./bin/fetch-configlet 
 
         $configletArgs = if ($Exercise) { @("-e", $Exercise) } else { @() }
-        Invoke-CallScriptExitOnError { ./bin/configlet sync --docs --update --yes $configletArgs }
+        & ./bin/configlet sync --docs --update --yes $configletArgs 
     }
 }
 

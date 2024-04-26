@@ -34,8 +34,7 @@ param (
     [Parameter()]$UnlockedBy
 )
 
-# Import shared functionality
-. ./shared.ps1
+$PSNativeCommandUseErrorActionPreference = $true
 
 function Add-Project {
     param (
@@ -51,8 +50,8 @@ function Add-Project {
 
     $csProj = "$exerciseDir/$ExerciseName.csproj"
 
-    Invoke-CallScriptExitOnError { dotnet new xunit -lang "C#" --target-framework-override net8.0 -o $exerciseDir -n $ExerciseName }
-    Invoke-CallScriptExitOnError { dotnet sln "$exercisesDir/Exercises.sln" add $csProj }
+    & dotnet new xunit -lang "C#" --target-framework-override net8.0 -o $exerciseDir -n $ExerciseName 
+    & dotnet sln "$exercisesDir/Exercises.sln" add $csProj 
 
     Remove-Item -Path "$exerciseDir/UnitTest1.cs"
 
@@ -171,8 +170,8 @@ function Update-ConfigJson {
         ConvertTo-Json -InputObject $config -Depth 10 | Set-Content -Path $configJson
     }
 
-    Invoke-CallScriptExitOnError { ./bin/fetch-configlet }
-    Invoke-CallScriptExitOnError { ./bin/configlet fmt . }
+    & ./bin/fetch-configlet 
+    & ./bin/configlet fmt . 
 }
 
 $exerciseName = (Get-Culture).TextInfo.ToTitleCase($Exercise).Replace("-", "")

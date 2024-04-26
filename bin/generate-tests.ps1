@@ -19,7 +19,7 @@ param (
     [string]$Exercise
 )
 
-. ./shared.ps1
+$PSNativeCommandUseErrorActionPreference = $true
 
 function Update-TestFilesForTrack {
     [CmdletBinding(SupportsShouldProcess)]
@@ -33,7 +33,7 @@ function Update-TestFilesForTrack {
 
     if ($PSCmdlet.ShouldProcess($generatorsProject, "execute")) {
         Write-Output "Updating tests"
-        Invoke-CallScriptExitOnError { dotnet run --project $generatorsProject $generatorsArgs }
+        & dotnet run --project $generatorsProject $generatorsArgs 
     }
 }
 
